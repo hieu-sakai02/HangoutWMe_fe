@@ -1,0 +1,68 @@
+.preview {
+    padding: 60px 0;
+}
+
+.preview h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 40px;
+    color: #030303;
+}
+
+.carouselContainer {
+    padding: 0 60px;
+}
+
+.spotCard {
+    padding: 0 15px;
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Creates a square aspect ratio */
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.imageWrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.spotCard:hover .imageWrapper img {
+    transform: scale(1.05);
+}
+
+.spotInfo {
+    text-align: center;
+}
+
+.spotInfo h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #030303;
+}
+
+.spotInfo p {
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .carouselContainer {
+        padding: 0 20px;
+    }
+
+    .preview h2 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+}

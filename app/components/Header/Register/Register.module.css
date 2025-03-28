@@ -1,0 +1,100 @@
+/* Copy all styles from Login.module.css and rename .loginForm to .registerForm and .loginSubmit to .registerSubmit */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.modalContent {
+    width: 100%;
+}
+
+.modalContent h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #030303;
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputGroup label {
+    font-size: 14px;
+    color: #030303;
+}
+
+.inputGroup input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background: #f5f5f5;
+    color: #030303;
+}
+
+.registerSubmit {
+    background: #ff2d8d;
+    color: #030303;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 10px;
+    border: 1px solid #030303;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.8);
+    transition: all 0.2s ease;
+}
+
+.registerSubmit:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.8);
+}
+
+.switchForm {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.switchButton {
+    background: none;
+    border: none;
+    color: #ff2d8d;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 8px;
+    padding: 0;
+}
+
+.switchButton:hover {
+    text-decoration: underline;
+} 

@@ -1,0 +1,115 @@
+.footer {
+    background: #ffffff;
+    padding: 40px 100px;
+    border-top: 1px solid #eaeaea;
+}
+
+.footerContent {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.footerSection {
+    flex: 1;
+}
+
+/* First section alignment */
+.footerSection:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Other sections alignment */
+.footerSection:not(:first-child) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.footerSection h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #030303;
+}
+
+.footerSection h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #030303;
+}
+
+.footerSection ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footerSection ul li {
+    margin-bottom: 12px;
+}
+
+.footerSection ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.footerSection ul li a:hover {
+    color: #030303;
+}
+
+.connect {
+    margin-top: 20px;
+}
+
+.connect p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.socialIcons {
+    display: flex;
+    gap: 16px;
+}
+
+.socialIcons a {
+    color: #030303;
+    transition: color 0.2s ease;
+}
+
+/* Custom icon styles */
+.socialIcons a:global(.instagram) {
+    color: #030303;
+    fill: #030303;
+}
+
+.socialIcons a:global(.music) {
+    stroke-width: 3;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 40px 20px;
+    }
+
+    .footerContent {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .footerSection,
+    .footerSection:not(:first-child) {
+        text-align: center;
+        align-items: center;
+    }
+
+    .socialIcons {
+        justify-content: center;
+    }
+}
