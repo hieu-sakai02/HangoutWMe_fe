@@ -2,6 +2,7 @@
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import styles from './AccountEdit.module.css';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 // CONTEXT
 import { useUser } from '@/app/context/UserContext';
 // ICONS
@@ -23,19 +24,26 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
         currentUser?.avatar || null
     );
     const [formData, setFormData] = useState({
+        email: '',
         name: '',
         password: '',
         confirmPassword: '',
+        dob: '',
+        address: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [avatarLoading, setAvatarLoading] = useState(false);
 
     useEffect(() => {
         setFormData({
+            email: currentUser?.email || '',
             name: currentUser?.name || '',
             password: '',
             confirmPassword: '',
+            dob: currentUser?.dob || '',
+            address: currentUser?.address || ''
         });
         setAvatarPreview(currentUser?.avatar || null);
     }, [currentUser]);
@@ -58,12 +66,16 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setAvatar(file);
+            setAvatarLoading(true);
             try {
                 const uploadImageURL = await uploadImage(file)
                 setAvatarPreview(uploadImageURL);
+                toast.success('Avatar uploaded successfully');
             } catch (error) {
                 console.error('Error uploading image:', error);
-                setError('Failed to upload image');
+                toast.error('Failed to upload image');
+            } finally {
+                setAvatarLoading(false);
             }
         }
     };
@@ -71,6 +83,7 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
     const handleRemoveAvatar = () => {
         setAvatar(null);
         setAvatarPreview(null);
+        toast.info('Avatar removed');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -81,25 +94,37 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
 
         // Check if password fields match
         if (formData.password && formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            toast.error('Passwords do not match');
             setLoading(false);
             return;
         }
 
         try {
             const userData: {
+                email?: string;
                 name?: string;
                 password?: string;
                 avatar?: string;
+                dob?: string;
+                address?: string;
             } = {};
 
-            // Only include fields that have changed
+            userData.email = currentUser.email;
+
             if (formData.name && formData.name !== currentUser.name) {
                 userData.name = formData.name;
             }
 
             if (formData.password) {
                 userData.password = formData.password;
+            }
+
+            if (formData.dob !== currentUser.dob) {
+                userData.dob = formData.dob;
+            }
+
+            if (formData.address !== currentUser.address) {
+                userData.address = formData.address;
             }
 
             if (avatar) {
@@ -118,36 +143,55 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
                 userData.avatar = '';
             }
 
-            // Only call API if there are changes
             if (Object.keys(userData).length > 0) {
-                // Pass the authentication token from currentUser
-                const token = currentUser.token; // Assuming token is stored in currentUser
-
+                const token = currentUser.token;
                 const response = await updateUser(userData, token);
 
-                // Update current user with new data
-                if (response.success) {
+                if (response.status == "success") {
                     setCurrentUser({
                         ...currentUser,
                         name: userData.name || currentUser.name,
+                        dob: userData.dob || currentUser.dob,
+                        address: userData.address || currentUser.address,
                         avatar: userData.avatar !== undefined
                             ? (userData.avatar || null)
-                            : currentUser.avatar
+                            : currentUser.avatar,
                     });
-                    setSuccess('Profile updated successfully');
+                    toast.success('Profile updated successfully');
+                    onClose();
                 }
             } else {
-                setSuccess('No changes detected');
+                toast.info('No changes detected');
             }
         } catch (error: any) {
             if (error.response?.data?.message) {
-                setError(error.response.data.message);
+                toast.error(error.response.data.message);
             } else {
-                setError('An error occurred while updating your profile');
+                toast.error('An error occurred while updating your profile');
             }
         } finally {
             setLoading(false);
         }
+    };
+
+    // Add a function to check if there are changes
+    const hasChanges = (): boolean => {
+        // Check for name, dob, and address changes
+        const hasFieldChanges =
+            formData.name !== currentUser.name ||
+            formData.dob !== currentUser.dob ||
+            formData.address !== currentUser.address;
+
+        // Check for password change
+        const hasPasswordChange = formData.password.length > 0;
+
+        // Check for avatar changes
+        const hasAvatarChange =
+            (avatarPreview === null && currentUser.avatar !== null) || // avatar removed
+            (avatarPreview !== null && currentUser.avatar === null) || // new avatar added
+            (avatarPreview !== currentUser.avatar); // avatar changed
+
+        return hasFieldChanges || hasPasswordChange || hasAvatarChange;
     };
 
     return (
@@ -160,13 +204,14 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
                     </button>
                 </div>
 
-                {error && <div className={styles.error}>{error}</div>}
-                {success && <div className={styles.success}>{success}</div>}
-
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.avatarSection}>
                         <div className={styles.avatarContainer} onClick={handleAvatarClick}>
-                            {avatarPreview ? (
+                            {avatarLoading ? (
+                                <div className={styles.avatarLoading}>
+                                    <div className={styles.spinner}></div>
+                                </div>
+                            ) : avatarPreview ? (
                                 <Image
                                     src={avatarPreview}
                                     alt="Profile avatar"
@@ -214,6 +259,29 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
                     </div>
 
                     <div className={styles.inputGroup}>
+                        <label htmlFor="dob">Date of Birth</label>
+                        <input
+                            type="date"
+                            id="dob"
+                            name="dob"
+                            value={formData.dob}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="address">Address</label>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            placeholder="Your address (optional)"
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
                         <label htmlFor="password">New Password</label>
                         <input
                             type="password"
@@ -249,7 +317,7 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
                         <button
                             type="submit"
                             className={styles.saveButton}
-                            disabled={loading}
+                            disabled={loading || !hasChanges()}
                         >
                             {loading ? 'Saving...' : 'Save Changes'}
                         </button>

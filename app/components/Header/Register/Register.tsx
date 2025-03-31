@@ -16,6 +16,8 @@ export default function Register({ onClose, onSwitchToLogin }: RegisterProps) {
         email: '',
         password: '',
         confirmPassword: '',
+        dob: '',
+        address: '',
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -45,6 +47,8 @@ export default function Register({ onClose, onSwitchToLogin }: RegisterProps) {
                 email: formData.email,
                 password: formData.password,
                 provider: 'user',
+                dob: formData.dob,
+                address: formData.address,
             };
 
             await registerUser(userData);
@@ -92,6 +96,27 @@ export default function Register({ onClose, onSwitchToLogin }: RegisterProps) {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
+                            />
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="dob">Date of Birth</label>
+                            <input
+                                type="date"
+                                id="dob"
+                                name="dob"
+                                value={formData.dob}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="address">Address</label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                placeholder="Your address (optional)"
                             />
                         </div>
                         <div className={styles.inputGroup}>

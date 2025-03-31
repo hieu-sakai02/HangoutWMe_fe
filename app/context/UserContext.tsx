@@ -7,6 +7,8 @@ interface User {
     email: string;
     avatar: string | null;
     provider: string;
+    dob: string | null;
+    address: string | null;
     token: string;
 }
 
