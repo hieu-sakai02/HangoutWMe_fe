@@ -17,6 +17,12 @@ interface UserLoginData {
     password: string;
 }
 
+interface UserUpdateData {
+    name?: string;
+    password?: string;
+    avatar?: string;
+}
+
 export const registerUser = async (data: UserRegistrationData) => {
     try {
         const response = await instance.post(`${URL}/register`, data);
@@ -41,10 +47,21 @@ export const loginWithGoogle = async () => {
     try {
         const response = await instance.get(`${URL}/google`);
         const authUrl = response.data.data.url;
-        console.log('Redirecting to:', authUrl);
+        window.location.href = authUrl;
         return authUrl;
     } catch (error) {
         console.error('Error logging in with Google:', error);
+        throw error;
+    }
+};
+
+export const updateUser = async (data: UserUpdateData, token?: string) => {
+    try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await instance.put(`${URL}/update`, data, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user:', error);
         throw error;
     }
 };

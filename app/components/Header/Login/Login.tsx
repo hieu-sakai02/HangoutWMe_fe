@@ -1,7 +1,6 @@
 'use client';
 import styles from './Login.module.css';
 import { Facebook, Chrome } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { loginUser, loginWithGoogle } from '@/apis/userService';
 import { useUser } from '@/app/context/UserContext';
@@ -47,7 +46,7 @@ export default function Login({ isOpen, onOpen, onClose, onSwitchToRegister }: L
         try {
             const response = await loginUser(formData);
             const { user } = response;
-            console.log(response);
+            user.token = response.token;
             setCurrentUser(user);
             onClose();
         } catch (error: any) {

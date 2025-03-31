@@ -7,6 +7,7 @@ interface User {
     email: string;
     avatar: string | null;
     provider: string;
+    token: string;
 }
 
 interface UserContextType {

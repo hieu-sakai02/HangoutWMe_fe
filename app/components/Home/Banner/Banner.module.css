@@ -27,11 +27,11 @@
 
 .getStarted {
     background: #ff2d8d;
-    color: #030303;
+    color: #fff;
     border: none;
     padding: 12px 24px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bolder;
     cursor: pointer;
     text-transform: uppercase;
     border: 1px solid #030303;
@@ -39,6 +39,7 @@
     transition: all 0.2s ease;
     box-sizing: border-box;
     width: 274px;
+    border-radius: 12px;
 }
 
 .getStarted:hover {

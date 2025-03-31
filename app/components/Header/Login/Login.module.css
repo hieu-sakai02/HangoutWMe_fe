@@ -7,11 +7,12 @@
     background: white;
     box-sizing: border-box;
     box-shadow: 2px 2px 0px rgba(0,0,0,0.8);
-    font-weight: 500;
+    font-weight: bolder;
     line-height: 18px;
-    text-align: uppercase;
+    text-transform: uppercase;
     outline: none;
     color: #030303;
+    border-radius: 12px;
 }
 
 .overlay {

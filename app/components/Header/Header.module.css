@@ -45,6 +45,16 @@
 	padding: 0px 16px;
 }
 
+.navLink {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.navIcon {
+	margin-right: 4px;
+}
+
 .authButtons {
 	display: flex;
 	gap: 10px;
@@ -60,11 +70,12 @@
 	border: 1px solid #030303;
 	box-sizing: border-box;
 	box-shadow: 2px 2px 0px rgba(0,0,0,0.8);
-	font-weight: 500;
+	font-weight: bolder;
 	line-height: 18px;
-	text-align: uppercase;
+	text-transform: uppercase;
 	outline: none;
-	color: #030303;
+	color: #fff;
+	border-radius: 12px;
 }
 
 .login {

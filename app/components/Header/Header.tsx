@@ -5,11 +5,14 @@ import Login from './Login/Login';
 import Register from './Register/Register';
 import { useUser } from '@/app/context/UserContext';
 import Image from 'next/image';
+import { Calendar, Coffee, Film, MapPin } from 'lucide-react';
+import AccountEdit from '../AccountEdit/AccountEdit';
 
 export default function Header() {
 	const [showLogin, setShowLogin] = useState(false);
 	const [showRegister, setShowRegister] = useState(false);
 	const [showDropdown, setShowDropdown] = useState(false);
+	const [showAccountEdit, setShowAccountEdit] = useState(false);
 	const { currentUser, setCurrentUser } = useUser();
 
 	useEffect(() => {
@@ -43,16 +46,28 @@ export default function Header() {
 					<nav className={styles.nav}>
 						<ul>
 							<li>
-								<a href="#">Events</a>
+								<a href="#" className={styles.navLink}>
+									<Calendar className={styles.navIcon} size={18} />
+									<span>Events</span>
+								</a>
 							</li>
 							<li>
-								<a href="#">Coffee</a>
+								<a href="#" className={styles.navLink}>
+									<Coffee className={styles.navIcon} size={18} />
+									<span>Coffee</span>
+								</a>
 							</li>
 							<li>
-								<a href="#">Entertainment</a>
+								<a href="#" className={styles.navLink}>
+									<Film className={styles.navIcon} size={18} />
+									<span>Entertainment</span>
+								</a>
 							</li>
 							<li>
-								<a href="#">Plans</a>
+								<a href="#" className={styles.navLink}>
+									<MapPin className={styles.navIcon} size={18} />
+									<span>Plans</span>
+								</a>
 							</li>
 						</ul>
 					</nav>
@@ -75,6 +90,14 @@ export default function Header() {
 							</button>
 							{showDropdown && (
 								<div className={styles.dropdown}>
+									<button
+										onClick={() => {
+											setShowAccountEdit(true);
+											setShowDropdown(false);
+										}}
+									>
+										Edit Profile
+									</button>
 									<button onClick={handleLogout}>Logout</button>
 								</div>
 							)}
@@ -107,6 +130,11 @@ export default function Header() {
 					}}
 				/>
 			)}
+
+			<AccountEdit
+				isOpen={showAccountEdit}
+				onClose={() => setShowAccountEdit(false)}
+			/>
 		</header>
 	);
 }
