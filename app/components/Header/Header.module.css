@@ -91,6 +91,7 @@
 }
 
 .avatarButton {
+	width: 120px;
 	background: none;
 	border: none;
 	padding: 0;

@@ -1,10 +1,14 @@
 'use client';
-import { useState, useRef, ChangeEvent } from 'react';
-import { updateUser } from '@/apis/userService';
-import { useUser } from '@/app/context/UserContext';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import styles from './AccountEdit.module.css';
 import Image from 'next/image';
+// CONTEXT
+import { useUser } from '@/app/context/UserContext';
+// ICONS
 import { Upload, User, X } from 'lucide-react';
+// API
+import { updateUser } from '@/apis/userService';
+import { uploadImage } from '@/apis/cloudinaryService';
 
 interface AccountEditProps {
     isOpen: boolean;
@@ -19,13 +23,22 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
         currentUser?.avatar || null
     );
     const [formData, setFormData] = useState({
-        name: currentUser?.name || '',
+        name: '',
         password: '',
         confirmPassword: '',
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    useEffect(() => {
+        setFormData({
+            name: currentUser?.name || '',
+            password: '',
+            confirmPassword: '',
+        });
+        setAvatarPreview(currentUser?.avatar || null);
+    }, [currentUser]);
 
     if (!isOpen || !currentUser) return null;
 
@@ -41,17 +54,17 @@ export default function AccountEdit({ isOpen, onClose }: AccountEditProps) {
         fileInputRef.current?.click();
     };
 
-    const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setAvatar(file);
-
-            // Create a preview URL
-            const reader = new FileReader();
-            reader.onload = () => {
-                setAvatarPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            try {
+                const uploadImageURL = await uploadImage(file)
+                setAvatarPreview(uploadImageURL);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                setError('Failed to upload image');
+            }
         }
     };
 
