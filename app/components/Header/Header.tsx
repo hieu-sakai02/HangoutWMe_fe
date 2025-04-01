@@ -34,7 +34,6 @@ export default function Header() {
 	const handleLogout = () => {
 		setCurrentUser(null);
 		setShowDropdown(false);
-		// Add any additional logout logic here
 	};
 
 	return (
