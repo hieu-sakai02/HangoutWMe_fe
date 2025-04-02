@@ -3,6 +3,7 @@
 :root {
 	--background: #ffffff;
 	--foreground: #2b2c2b;
+	--text-color: #333;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,7 +20,7 @@ body {
 }
 
 body {
-	color: var(--foreground);
+	color: var(--text-color);
 	background: var(--background);
 	font-family: var(--font-poppins), sans-serif;
 	-webkit-font-smoothing: antialiased;

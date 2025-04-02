@@ -7,6 +7,7 @@ import { useUser } from '@/app/context/UserContext';
 import Image from 'next/image';
 import { Calendar, Coffee, Film, MapPin } from 'lucide-react';
 import AccountEdit from '../AccountEdit/AccountEdit';
+import Link from 'next/link';
 
 export default function Header() {
 	const [showLogin, setShowLogin] = useState(false);
@@ -40,7 +41,9 @@ export default function Header() {
 		<header className={styles.header}>
 			<div className={styles.container}>
 				<div className={styles.headerLeft}>
-					<h1 className={styles.logo}>HangoutInv</h1>
+					<Link href="/" className={styles.logo}>
+						HangoutInv
+					</Link>
 
 					<nav className={styles.nav}>
 						<ul>
@@ -51,10 +54,10 @@ export default function Header() {
 								</a>
 							</li>
 							<li>
-								<a href="#" className={styles.navLink}>
+								<Link href="/coffee" className={styles.navLink}>
 									<Coffee className={styles.navIcon} size={18} />
 									<span>Coffee</span>
-								</a>
+								</Link>
 							</li>
 							<li>
 								<a href="#" className={styles.navLink}>

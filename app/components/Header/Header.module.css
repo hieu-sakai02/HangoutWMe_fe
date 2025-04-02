@@ -25,9 +25,15 @@
 }
 
 .logo {
-	font-size: 20px;
-	font-weight: 800;
-	line-height: 26px;
+	color: var(--text-color);
+	text-decoration: none;
+	font-size: 1.5rem;
+	font-weight: bold;
+	transition: opacity 0.2s;
+}
+
+.logo:hover {
+	opacity: 0.8;
 }
 
 .nav ul {
@@ -38,7 +44,7 @@
 
 .nav a {
 	text-decoration: none;
-	color: black;
+	color: var(--text-color);
 	font-weight: 500;
 	font-size: 16px;
 	line-height: 22px;
@@ -49,6 +55,7 @@
 	display: flex;
 	align-items: center;
 	gap: 6px;
+	color: var(--text-color);
 }
 
 .navIcon {
