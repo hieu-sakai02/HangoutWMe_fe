@@ -65,3 +65,13 @@ export const updateUser = async (data: UserUpdateData, token?: string) => {
         throw error;
     }
 };
+
+export const checkLoginStatus = async () => {
+    try {
+        const response = await instance.get(`${URL}/me`);
+        return response.data.data;
+    } catch (error) {
+        console.error('Error checking auth status:', error);
+        throw error;
+    }
+};
