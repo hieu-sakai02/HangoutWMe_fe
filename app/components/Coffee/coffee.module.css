@@ -379,3 +379,23 @@
         justify-content: center;
     }
 }
+
+.ratingTag {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: white;
+    font-weight: 500;
+    z-index: 2;
+}
+
+.ratingTag span {
+    line-height: 1;
+}

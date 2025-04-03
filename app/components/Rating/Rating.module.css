@@ -1,0 +1,196 @@
+.container {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.averageRating {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ratingStats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bigStar {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.totalReviews {
+    color: #666;
+}
+
+.addReviewButton {
+    padding: 0.5rem 1rem;
+    background: #ff2d8d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.addReviewButton:hover {
+    background: #e6267e;
+}
+
+.ratingForm {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.starRating {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.ratingForm textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    resize: vertical;
+}
+
+.formButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.formButtons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.formButtons button[type="button"] {
+    background: white;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.formButtons button[type="submit"] {
+    background: #ff2d8d;
+    color: white;
+    border: none;
+}
+
+.reviewsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.reviewItem {
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.userAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userName {
+    font-weight: 500;
+}
+
+.reviewActions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.reviewButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.editButton:hover {
+    color: #0066cc;
+}
+
+.deleteButton:hover {
+    color: #dc3545;
+}
+
+.reviewComment {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.reviewDate {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .reviewHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .reviewActions {
+        width: 100%;
+        justify-content: space-between;
+    }
+} 

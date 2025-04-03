@@ -1,0 +1,126 @@
+.topRated {
+    padding: 60px 0;
+    background: #f9f9f9;
+}
+
+.topRated h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.carouselContainer {
+    padding: 0 60px;
+}
+
+.shopCard {
+    padding: 0 15px;
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.imageWrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.shopCard:hover .imageWrapper img {
+    transform: scale(1.05);
+}
+
+.rating {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    font-weight: 500;
+}
+
+.shopInfo {
+    text-align: center;
+}
+
+.shopInfo h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.shopInfo p {
+    font-size: 14px;
+    color: #666;
+}
+
+.loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+
+.error {
+    color: #dc3545;
+}
+
+/* Customize slick carousel arrows */
+:global(.slick-prev),
+:global(.slick-next) {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+:global(.slick-prev:hover),
+:global(.slick-next:hover) {
+    background: white;
+}
+
+:global(.slick-prev) {
+    left: 10px;
+}
+
+:global(.slick-next) {
+    right: 10px;
+}
+
+:global(.slick-dots) {
+    bottom: -40px;
+}
+
+:global(.slick-dots li button:before) {
+    font-size: 10px;
+}
+
+@media (max-width: 768px) {
+    .carouselContainer {
+        padding: 0 20px;
+    }
+
+    .topRated h2 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+} 

@@ -1,14 +1,13 @@
 import styles from './Home.module.css';
 // COMPONENTS
 import Banner from './Banner/Banner';
-import Preview from './Preview/Preview';
-
+import TopRated from './TopRated/TopRated';
 
 export default function HomeContent() {
     return (
         <main>
             <Banner />
-            <Preview />
+            <TopRated />
         </main>
     );
 }

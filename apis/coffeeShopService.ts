@@ -72,6 +72,14 @@ export const getCoffeeShopsById = async (id: number) => {
     }
 }
 
+export const getTop10CoffeeShops = async () => {
+    try {
+        const response = await instance.get(`${URL}/top-rated`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
 export const createNewCoffeeShop = async (data: CreateCoffeeShopData) => {
     try {
         const response = await instance.post(URL, data);
@@ -97,4 +105,4 @@ export const deleteCoffeeShop = async (id: number) => {
     } catch (error) {
         throw error;
     }
-}   
+}

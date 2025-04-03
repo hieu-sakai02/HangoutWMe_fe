@@ -3,32 +3,40 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { CoffeeShop, getCoffeeShopsById } from '@/apis/coffeeShopService';
+import { Rating as RatingType, getCoffeeShopRatings } from '@/apis/ratingCoffeeShopService';
 import styles from './page.module.css';
 import { MapPin, Phone, Mail, Globe, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Rating from '@/app/components/Rating/Rating';
 
 export default function CoffeeShopDetail() {
     const params = useParams();
     const [coffeeShop, setCoffeeShop] = useState<CoffeeShop | null>(null);
+    const [ratings, setRatings] = useState<RatingType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchCoffeeShop = async () => {
-            try {
-                setLoading(true);
-                const response = await getCoffeeShopsById(Number(params.id));
-                setCoffeeShop(response.data);
-            } catch (err) {
-                setError('Failed to fetch coffee shop details');
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const [shopResponse, ratingsResponse] = await Promise.all([
+                getCoffeeShopsById(Number(params.id)),
+                getCoffeeShopRatings(Number(params.id))
+            ]);
 
+            setCoffeeShop(shopResponse.data);
+            setRatings(ratingsResponse.data as RatingType[]);
+        } catch (err) {
+            setError('Failed to fetch coffee shop details');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (params.id) {
-            fetchCoffeeShop();
+            fetchData();
         }
     }, [params.id]);
 
@@ -122,6 +130,14 @@ export default function CoffeeShopDetail() {
                     </div>
                 </div>
             </div>
+
+            {!loading && !error && coffeeShop && (
+                <Rating
+                    coffeeShopId={coffeeShop.id}
+                    ratings={ratings}
+                    onRatingUpdate={fetchData}
+                />
+            )}
         </main>
     );
 } 

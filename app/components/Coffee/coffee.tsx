@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from './coffee.module.css';
-import { Search, Heart, Globe, Phone, Mail, MapPin, Plus, Filter } from 'lucide-react';
+import { Search, Heart, Globe, Phone, Mail, MapPin, Plus, Filter, Star } from 'lucide-react';
 import { CoffeeShop, getAllCoffeeShops } from '@/apis/coffeeShopService';
 import { getFavoriteCoffeeShopsByUserId, updateFavoriteCoffeeShop, addFavoriteCoffeeShop } from '@/apis/favCoffeeShopService';
 import AddCoffeeShop from './AddCoffeeShop/AddCoffeeShop';
@@ -340,6 +340,10 @@ export default function Coffee() {
                                     Favorite
                                 </div>
                             )}
+                            <div className={styles.ratingTag}>
+                                <Star size={14} fill="#FFD700" color="#FFD700" />
+                                <span>{Number(shop.ratings_avg_rating).toFixed(1)}</span>
+                            </div>
                         </div>
                         <Link href={`/coffee/${shop.id}`} className={styles.cardContent}>
                             <div className={styles.content}>
