@@ -2,8 +2,6 @@ import instance from "./axiosInterceptors";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const URL = `${BASE_URL}/api/coffee-shops`;
-
-// Define TypeScript interfaces for the data structures
 export interface CoffeeShop {
     id: number;
     name: string;
@@ -59,6 +57,15 @@ export interface UpdateCoffeeShopData {
 export const getAllCoffeeShops = async () => {
     try {
         const response = await instance.get(URL);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getCoffeeShopsById = async (id: number) => {
+    try {
+        const response = await instance.get(`${URL}/${id}`);
         return response.data;
     } catch (error) {
         throw error;

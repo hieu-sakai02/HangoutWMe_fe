@@ -4,6 +4,8 @@ import "./globals.css";
 import { UserProvider } from './context/UserContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,14 +18,15 @@ const geistMono = Geist_Mono({
 });
 
 const poppins = Poppins({
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
+  display: 'swap',
   variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
-  title: "Hangout With Me",
-  description: "Hangout With Me",
+  title: "HangoutInv",
+  description: "Find your perfect hangout spot",
 };
 
 export default function RootLayout({
@@ -35,19 +38,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}>
         <UserProvider>
-          {children}
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
+          <div className="layout">
+            <Header />
+            <main className="main">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <ToastContainer />
         </UserProvider>
       </body>
     </html>

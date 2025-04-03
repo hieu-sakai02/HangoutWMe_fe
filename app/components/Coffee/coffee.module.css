@@ -56,6 +56,11 @@
     color: #333;
 }
 
+.filterButtons {
+    display: flex;
+    gap: 1rem;
+}
+
 .filterButton {
     display: flex;
     align-items: center;
@@ -66,9 +71,9 @@
     background: white;
     cursor: pointer;
     transition: all 0.2s;
-    white-space: nowrap;
     height: 42px;
-    color: #333;
+    white-space: nowrap;
+    color: var(--text-color);
 }
 
 .filterButton:hover {
@@ -76,8 +81,13 @@
 }
 
 .filterButton.active {
-    background: #f0f0f0;
-    border-color: #999;
+    background: #ff2d8d;
+    border-color: #ff2d8d;
+    color: white;
+}
+
+.filterButton.active svg {
+    color: white;
 }
 
 .addressFilters {
@@ -160,6 +170,7 @@
 }
 
 .card {
+    position: relative;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -200,21 +211,20 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
-    opacity: 0;
-}
-
-.imageContainer:hover .favoriteButton {
-    opacity: 1;
+    z-index: 2;
 }
 
 .favoriteButton:hover {
-    background: rgba(0, 0, 0, 0.7);
     transform: scale(1.1);
 }
 
 .favoriteButton.active {
-    opacity: 1;
     background: rgba(255, 255, 255, 0.9);
+}
+
+.cardContent {
+    text-decoration: none;
+    color: inherit;
 }
 
 .content {
@@ -325,5 +335,47 @@
     .searchBar,
     .filterButton {
         width: 100%;
+    }
+}
+
+.cardLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cardLink:hover .card {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.favoriteTag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #ff0000;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .searchAndFilter {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filterButtons {
+        width: 100%;
+    }
+
+    .filterButton {
+        flex: 1;
+        justify-content: center;
     }
 }

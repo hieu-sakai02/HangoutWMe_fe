@@ -4,23 +4,19 @@ import { useState, useEffect } from 'react';
 import styles from './coffee.module.css';
 import { Search, Heart, Globe, Phone, Mail, MapPin, Plus, Filter } from 'lucide-react';
 import { CoffeeShop, getAllCoffeeShops } from '@/apis/coffeeShopService';
+import { getFavoriteCoffeeShopsByUserId, updateFavoriteCoffeeShop, addFavoriteCoffeeShop } from '@/apis/favCoffeeShopService';
 import AddCoffeeShop from './AddCoffeeShop/AddCoffeeShop';
 import { useUser } from '@/app/context/UserContext';
 import { ADDRESS } from '@/app/constant/CONST';
+import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 export default function Coffee() {
     const [searchTerm, setSearchTerm] = useState('');
     const [coffeeShops, setCoffeeShops] = useState<CoffeeShop[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [favorites, setFavorites] = useState<number[]>(() => {
-        // Initialize favorites from localStorage
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('favoriteCoffeeShops');
-            return saved ? JSON.parse(saved) : [];
-        }
-        return [];
-    });
+    const [favorites, setFavorites] = useState<number[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const { currentUser } = useUser();
     const [addressFilter, setAddressFilter] = useState({
@@ -30,6 +26,7 @@ export default function Coffee() {
         street: ''
     });
     const [showAddressFilter, setShowAddressFilter] = useState(false);
+    const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
     // Derived state for dropdowns
     const availableDistricts = addressFilter.city ? Object.keys(ADDRESS[addressFilter.city]) : [];
@@ -77,12 +74,10 @@ export default function Coffee() {
 
     useEffect(() => {
         fetchCoffeeShops();
-    }, []);
-
-    useEffect(() => {
-        // Save favorites to localStorage whenever they change
-        localStorage.setItem('favoriteCoffeeShops', JSON.stringify(favorites));
-    }, [favorites]);
+        if (currentUser) {
+            fetchFavorites();
+        }
+    }, [currentUser]);
 
     const fetchCoffeeShops = async () => {
         try {
@@ -99,29 +94,74 @@ export default function Coffee() {
         }
     };
 
-    const toggleFavorite = (shopId: number) => {
-        setFavorites(prev =>
-            prev.includes(shopId)
-                ? prev.filter(id => id !== shopId)
-                : [...prev, shopId]
-        );
+    const fetchFavorites = async () => {
+        if (!currentUser) return;
+        try {
+            const response = await getFavoriteCoffeeShopsByUserId(currentUser.id);
+            if (Array.isArray(response.data)) {
+                const favoriteIds = response.data.map(fav => fav.coffee_shop_id);
+                setFavorites(favoriteIds);
+            }
+        } catch (err) {
+            console.error('Failed to fetch favorites:', err);
+        }
+    };
+
+    const toggleFavorite = async (shopId: number) => {
+        if (!currentUser) {
+            toast.error('Please login to add favorites');
+            return;
+        }
+
+        try {
+            const isFavorite = favorites.includes(shopId);
+            if (isFavorite) {
+                // Remove from favorites
+                await updateFavoriteCoffeeShop(currentUser.id, shopId, false);
+                setFavorites(prev => prev.filter(id => id !== shopId));
+            } else {
+                // Add to favorites
+                await addFavoriteCoffeeShop({
+                    user_id: currentUser.id,
+                    coffee_shop_id: shopId
+                });
+                setFavorites(prev => [...prev, shopId]);
+            }
+        } catch (err) {
+            console.error('Failed to update favorite:', err);
+            toast.error('Failed to update favorite');
+        }
     };
 
     const handleAddSuccess = () => {
         fetchCoffeeShops();
     };
 
-    const filteredShops = coffeeShops
+    const sortedAndFilteredShops = coffeeShops
+        // First filter by search term
         .filter(shop =>
             shop.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
+        // Then filter by address if filters are active
         .filter(shop => {
-            // Address filtering only
             if (addressFilter.city && shop.city !== addressFilter.city) return false;
             if (addressFilter.district && shop.district !== addressFilter.district) return false;
             if (addressFilter.ward && shop.ward !== addressFilter.ward) return false;
             if (addressFilter.street && shop.street !== addressFilter.street) return false;
             return true;
+        })
+        // Then filter favorites if the toggle is on
+        .filter(shop => {
+            if (showOnlyFavorites) return favorites.includes(shop.id);
+            return true;
+        })
+        // Finally sort to put favorites at the top
+        .sort((a, b) => {
+            const aIsFavorite = favorites.includes(a.id);
+            const bIsFavorite = favorites.includes(b.id);
+            if (aIsFavorite && !bIsFavorite) return -1;
+            if (!aIsFavorite && bIsFavorite) return 1;
+            return 0;
         });
 
     const truncateText = (text: string, maxLength: number) => {
@@ -129,7 +169,7 @@ export default function Coffee() {
         return text.slice(0, maxLength) + '...';
     };
 
-     const formatAddress = (shop: CoffeeShop) => {
+    const formatAddress = (shop: CoffeeShop) => {
         const parts = [
             `${shop.houseNumber} ${shop.street ? shop.street : ''}`.trim(),
             shop.ward,
@@ -183,13 +223,25 @@ export default function Coffee() {
                         />
                     </div>
 
-                    <button
-                        className={`${styles.filterButton} ${showAddressFilter ? styles.active : ''}`}
-                        onClick={() => setShowAddressFilter(!showAddressFilter)}
-                    >
-                        <Filter size={20} />
-                        Address Filter
-                    </button>
+                    <div className={styles.filterButtons}>
+                        {currentUser && (
+                            <button
+                                className={`${styles.filterButton} ${showOnlyFavorites ? styles.active : ''}`}
+                                onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                            >
+                                <Heart size={20} />
+                                {showOnlyFavorites ? 'Show All' : 'Show Favorites'}
+                            </button>
+                        )}
+
+                        <button
+                            className={`${styles.filterButton} ${showAddressFilter ? styles.active : ''}`}
+                            onClick={() => setShowAddressFilter(!showAddressFilter)}
+                        >
+                            <Filter size={20} />
+                            Address Filter
+                        </button>
+                    </div>
                 </div>
 
                 {showAddressFilter && (
@@ -257,64 +309,79 @@ export default function Coffee() {
             </div>
 
             <div className={styles.grid}>
-                {filteredShops.map((shop) => (
+                {sortedAndFilteredShops.map((shop) => (
                     <div key={shop.id} className={styles.card}>
                         <div className={styles.imageContainer}>
-                            <img
-                                src={shop.thumbnail}
-                                alt={shop.name}
-                                className={styles.image}
-                            />
-                            <button
-                                className={`${styles.favoriteButton} ${favorites.includes(shop.id) ? styles.active : ''}`}
-                                onClick={() => toggleFavorite(shop.id)}
-                                aria-label={favorites.includes(shop.id) ? "Remove from favorites" : "Add to favorites"}
-                            >
-                                <Heart
-                                    fill={favorites.includes(shop.id) ? "#ff0000" : "none"}
-                                    color={favorites.includes(shop.id) ? "#ff0000" : "#ffffff"}
+                            <Link href={`/coffee/${shop.id}`}>
+                                <img
+                                    src={shop.thumbnail}
+                                    alt={shop.name}
+                                    className={styles.image}
                                 />
-                            </button>
-                        </div>
-                        <div className={styles.content}>
-                            <h3>{shop.name}</h3>
-                            <div className={styles.details}>
-                                <div className={styles.detail}>
-                                    <MapPin size={16} />
-                                    <span title={formatAddress(shop)}>
-                                        {truncateText(formatAddress(shop), 35)}
-                                    </span>
+                            </Link>
+                            {currentUser && (
+                                <button
+                                    className={`${styles.favoriteButton} ${favorites.includes(shop.id) ? styles.active : ''}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleFavorite(shop.id);
+                                    }}
+                                    aria-label={favorites.includes(shop.id) ? "Remove from favorites" : "Add to favorites"}
+                                >
+                                    <Heart
+                                        fill={favorites.includes(shop.id) ? "#ff0000" : "none"}
+                                        color={favorites.includes(shop.id) ? "#ff0000" : "#ffffff"}
+                                    />
+                                </button>
+                            )}
+                            {favorites.includes(shop.id) && (
+                                <div className={styles.favoriteTag}>
+                                    <Heart size={14} fill="#ff0000" color="#ff0000" />
+                                    Favorite
                                 </div>
-                                {shop.phone && (
-                                    <div className={styles.detail}>
-                                        <Phone size={16} />
-                                        <span>{shop.phone}</span>
-                                    </div>
-                                )}
-                                {shop.email && (
-                                    <div className={styles.detail}>
-                                        <Mail size={16} />
-                                        <span>{shop.email}</span>
-                                    </div>
-                                )}
-                                {shop.website && (
-                                    <div className={styles.detail}>
-                                        <Globe size={16} />
-                                        <a
-                                            href={shop.website}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.websiteLink}
-                                        >
-                                            Visit Website
-                                        </a>
-                                    </div>
-                                )}
-                            </div>
-                            <p className={styles.description} title={shop.description}>
-                                {truncateText(shop.description, 100)}
-                            </p>
+                            )}
                         </div>
+                        <Link href={`/coffee/${shop.id}`} className={styles.cardContent}>
+                            <div className={styles.content}>
+                                <h3>{shop.name}</h3>
+                                <div className={styles.details}>
+                                    <div className={styles.detail}>
+                                        <MapPin size={16} />
+                                        <span title={formatAddress(shop)}>
+                                            {truncateText(formatAddress(shop), 35)}
+                                        </span>
+                                    </div>
+                                    {shop.phone && (
+                                        <div className={styles.detail}>
+                                            <Phone size={16} />
+                                            <span>{shop.phone}</span>
+                                        </div>
+                                    )}
+                                    {shop.email && (
+                                        <div className={styles.detail}>
+                                            <Mail size={16} />
+                                            <span>{shop.email}</span>
+                                        </div>
+                                    )}
+                                    {shop.website && (
+                                        <div className={styles.detail}>
+                                            <Globe size={16} />
+                                            <a
+                                                href={shop.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.websiteLink}
+                                            >
+                                                Visit Website
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                                <p className={styles.description} title={shop.description}>
+                                    {truncateText(shop.description, 100)}
+                                </p>
+                            </div>
+                        </Link>
                     </div>
                 ))}
             </div>
