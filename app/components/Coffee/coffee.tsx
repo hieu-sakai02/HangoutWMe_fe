@@ -129,7 +129,7 @@ export default function Coffee() {
         return text.slice(0, maxLength) + '...';
     };
 
-    const formatAddress = (shop: CoffeeShop) => {
+     const formatAddress = (shop: CoffeeShop) => {
         const parts = [
             `${shop.houseNumber} ${shop.street ? shop.street : ''}`.trim(),
             shop.ward,
