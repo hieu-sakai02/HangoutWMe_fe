@@ -1,7 +1,14 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
 .backButton {
@@ -10,7 +17,6 @@
     gap: 0.5rem;
     color: var(--text-color);
     text-decoration: none;
-    margin-bottom: 2rem;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     transition: background-color 0.2s;
@@ -20,50 +26,73 @@
     background-color: #f5f5f5;
 }
 
+.editButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #ff2d8d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.editButton:hover {
+    background: #e6267e;
+    transform: translateY(-2px);
+}
+
 .content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .leftSection {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .imageSection {
     position: relative;
-    width: 100%;
-    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .image {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 4/3;
     object-fit: cover;
-    border-radius: 12px;
 }
 
 .detailsSection {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mainInfo {
     padding: 2rem;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--text-color);
-    margin-bottom: 1.5rem;
+    margin: 0 0 1.5rem 0;
 }
 
-.infoGrid {
+.basicInfo {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
 }
 
 .infoItem {
@@ -71,6 +100,11 @@
     align-items: center;
     gap: 0.75rem;
     color: var(--text-color);
+}
+
+.infoItem svg {
+    color: #ff2d8d;
+    flex-shrink: 0;
 }
 
 .infoItem a {
@@ -84,52 +118,19 @@
     text-decoration: underline;
 }
 
-.description {
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
-}
-
-.description h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-.description p {
-    line-height: 1.6;
-    color: var(--text-color);
-}
-
-.loading, .error {
-    text-align: center;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: var(--text-color);
-}
-
-.error {
-    color: #dc3545;
-}
-
 .operatingHours {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: #f8f8f8;
-    border-radius: 8px;
     margin-bottom: 1.5rem;
-    color: var(--text-color);
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
 }
 
-.featuresGrid {
+.features {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1rem;
-    margin: 1.5rem 0;
-    padding: 1.5rem;
-    background: #f8f8f8;
-    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
 }
 
 .feature {
@@ -137,7 +138,7 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: white;
+    background: #f8f8f8;
     border-radius: 8px;
     color: var(--text-color);
 }
@@ -146,58 +147,90 @@
     color: #ff2d8d;
 }
 
+.featureIcons {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.keyIcon {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    background: #f8f8f8;
+    border-radius: 50%;
+    padding: 2px;
+    color: #666;
+}
+
+.wifiPassword {
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.featureText {
+    display: flex;
+    flex-direction: column;
+}
+
 .featureDetail {
     font-size: 0.875rem;
     color: #666;
-    margin-left: auto;
 }
 
-@media (max-width: 768px) {
+.description h2 {
+    font-size: 1.25rem;
+    color: var(--text-color);
+    margin: 0 0 1rem 0;
+}
+
+.description p {
+    line-height: 1.6;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.ratingsSection {
+    margin-top: 3rem;
+}
+
+@media (max-width: 1024px) {
     .content {
         grid-template-columns: 1fr;
     }
 
-    .imageSection {
-        height: 300px;
-    }
-
     .leftSection {
+        gap: 1.5rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
         gap: 1rem;
+        align-items: stretch;
     }
 
-    .featuresGrid {
+    .backButton,
+    .editButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .features {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        padding: 1rem;
     }
 
-    .feature {
-        padding: 0.5rem;
-        font-size: 0.875rem;
+    .title {
+        font-size: 1.75rem;
     }
-}
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.editButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: #ff2d8d;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.editButton:hover {
-    background: #e6267e;
-    transform: scale(1.05);
+    .mainInfo {
+        padding: 1.5rem;
+    }
 } 

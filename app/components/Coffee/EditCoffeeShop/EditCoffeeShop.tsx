@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import styles from './EditCoffeeShop.module.css';
 import { X, Upload, Image as ImageIcon, Loader2, Coffee, Car, Dog, Wifi, Cake, Sun, Home, Moon, Clock } from 'lucide-react';
 import { uploadImage } from '@/apis/cloudinaryService';
@@ -50,6 +50,18 @@ export default function EditCoffeeShop({ isOpen, onClose, onSuccess, coffeeShop 
         ward: coffeeShop.ward,
         street: coffeeShop.street || ''
     });
+
+    // Add effect to handle body scroll
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cleanup function to remove the style when component unmounts or modal closes
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -201,10 +213,11 @@ export default function EditCoffeeShop({ isOpen, onClose, onSuccess, coffeeShop 
                             value={formData.name}
                             onChange={handleChange}
                             required
+                            placeholder="Enter coffee shop name"
                         />
                     </div>
 
-                    <div className={styles.addressSection}>
+                    <div className={styles.formSection}>
                         <h3>Address Details</h3>
                         <div className={styles.addressGrid}>
                             <div className={styles.inputGroup}>
@@ -283,7 +296,97 @@ export default function EditCoffeeShop({ isOpen, onClose, onSuccess, coffeeShop 
                         </div>
                     </div>
 
-                    <div className={styles.featuresSection}>
+                    <div className={styles.formSection}>
+                        <h3>Description</h3>
+                        <div className={styles.descriptionGroup}>
+                            <textarea
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                                placeholder="Describe your coffee shop..."
+                                rows={6}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <h3>Operating Hours</h3>
+                        <div className={styles.timeInputs}>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="openTime">Opening Time</label>
+                                <input
+                                    type="time"
+                                    id="openTime"
+                                    name="openTime"
+                                    value={formData.openTime}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="closeTime">Closing Time</label>
+                                <input
+                                    type="time"
+                                    id="closeTime"
+                                    name="closeTime"
+                                    value={formData.closeTime}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <Toggle
+                                label="Open Overnight"
+                                checked={formData.overNight}
+                                onChange={(checked) => handleCheckboxChange('overNight', checked)}
+                                icon={<Moon size={20} />}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <h3>Contact Information</h3>
+                        <div className={styles.contactGrid}>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="phone">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    placeholder="Enter phone number"
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="email">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter email address"
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="website">Website</label>
+                                <input
+                                    type="url"
+                                    id="website"
+                                    name="website"
+                                    value={formData.website}
+                                    onChange={handleChange}
+                                    placeholder="Enter website URL"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.formSection}>
                         <h3>Features & Amenities</h3>
                         <div className={styles.featuresGrid}>
                             <Toggle
@@ -321,99 +424,18 @@ export default function EditCoffeeShop({ isOpen, onClose, onSuccess, coffeeShop 
                                 icon={<Home size={20} />}
                             />
 
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="wifi">WiFi Details</label>
+                            <div className={styles.wifiInput}>
+                                <div className={styles.wifiInputHeader}>
+                                    <Wifi size={20} />
+                                    <label htmlFor="wifi">WiFi Password</label>
+                                </div>
                                 <input
                                     type="text"
                                     id="wifi"
                                     name="wifi"
                                     value={formData.wifi}
                                     onChange={handleChange}
-                                    placeholder="WiFi details (optional)"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.operatingHours}>
-                        <h3>Operating Hours</h3>
-                        <div className={styles.timeInputs}>
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="openTime">Opening Time</label>
-                                <input
-                                    type="time"
-                                    id="openTime"
-                                    name="openTime"
-                                    value={formData.openTime}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="closeTime">Closing Time</label>
-                                <input
-                                    type="time"
-                                    id="closeTime"
-                                    name="closeTime"
-                                    value={formData.closeTime}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <Toggle
-                                label="Open Overnight"
-                                checked={formData.overNight}
-                                onChange={(checked) => handleCheckboxChange('overNight', checked)}
-                                icon={<Moon size={20} />}
-                            />
-                        </div>
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="description">Description *</label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            required
-                            rows={4}
-                        />
-                    </div>
-
-                    <div className={styles.contactSection}>
-                        <h3>Contact Information</h3>
-                        <div className={styles.contactGrid}>
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="phone">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="email">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="website">Website</label>
-                                <input
-                                    type="url"
-                                    id="website"
-                                    name="website"
-                                    value={formData.website}
-                                    onChange={handleChange}
+                                    placeholder="Enter password"
                                 />
                             </div>
                         </div>

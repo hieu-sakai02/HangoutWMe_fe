@@ -13,6 +13,7 @@ interface User {
     dob: string | null;
     address: string | null;
     token: string;
+    isAdmin: boolean;
 }
 
 const UserContext = createContext<{

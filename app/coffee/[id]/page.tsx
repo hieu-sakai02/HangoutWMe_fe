@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { CoffeeShop, getCoffeeShopsById } from '@/apis/coffeeShopService';
 import { Rating as RatingType, getCoffeeShopRatings } from '@/apis/ratingCoffeeShopService';
 import styles from './page.module.css';
-import { MapPin, Phone, Mail, Globe, ArrowLeft, Coffee, Car, Dog, Wifi, Cake, Sun, Home, Moon, Clock, Edit2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Globe, ArrowLeft, Coffee, Car, Dog, Wifi, Key, Cake, Sun, Home, Moon, Clock, Edit2, Info } from 'lucide-react';
 import Link from 'next/link';
 import Rating from '@/app/components/Rating/Rating';
 import ImageGallery from '@/app/components/ImageGallery/ImageGallery';
@@ -90,7 +90,7 @@ export default function CoffeeShopDetail() {
                     Back to Coffee Shops
                 </Link>
 
-                {currentUser && (
+                {currentUser?.isAdmin && (
                     <button
                         className={styles.editButton}
                         onClick={() => setShowEditModal(true)}
@@ -119,122 +119,117 @@ export default function CoffeeShopDetail() {
                 </div>
 
                 <div className={styles.detailsSection}>
-                    <h1 className={styles.title}>{coffeeShop.name}</h1>
+                    <div className={styles.mainInfo}>
+                        <h1 className={styles.title}>{coffeeShop.name}</h1>
 
-                    {/* Operating Hours */}
-                    {(coffeeShop.openTime || coffeeShop.closeTime) && (
-                        <div className={styles.operatingHours}>
-                            <Clock size={20} />
-                            <span>
-                                {coffeeShop.openTime && coffeeShop.closeTime
-                                    ? `${formatTime(coffeeShop.openTime)} - ${formatTime(coffeeShop.closeTime)}`
-                                    : coffeeShop.openTime
-                                        ? `Opens at ${formatTime(coffeeShop.openTime)}`
-                                        : `Closes at ${formatTime(coffeeShop.closeTime)}`
-                                }
-                                {coffeeShop.overNight && ' (Open Overnight)'}
-                            </span>
-                        </div>
-                    )}
-
-                    {/* Features Grid */}
-                    <div className={styles.featuresGrid}>
-                        {coffeeShop.wifi && (
-                            <div className={styles.feature}>
-                                <Wifi size={20} />
-                                <span>WiFi Available</span>
-                                {coffeeShop.wifi !== 'true' && (
-                                    <span className={styles.featureDetail}>{coffeeShop.wifi}</span>
-                                )}
+                        <div className={styles.basicInfo}>
+                            <div className={styles.infoItem}>
+                                <MapPin size={20} />
+                                <span>{formatAddress()}</span>
                             </div>
-                        )}
 
-                        {coffeeShop.cake && (
-                            <div className={styles.feature}>
-                                <Cake size={20} />
-                                <span>Cake Available</span>
-                            </div>
-                        )}
+                            {coffeeShop.phone && (
+                                <div className={styles.infoItem}>
+                                    <Phone size={20} />
+                                    <a href={`tel:${coffeeShop.phone}`}>{coffeeShop.phone}</a>
+                                </div>
+                            )}
 
-                        {coffeeShop.carPark && (
-                            <div className={styles.feature}>
-                                <Car size={20} />
-                                <span>Car Parking</span>
-                            </div>
-                        )}
+                            {coffeeShop.email && (
+                                <div className={styles.infoItem}>
+                                    <Mail size={20} />
+                                    <a href={`mailto:${coffeeShop.email}`}>{coffeeShop.email}</a>
+                                </div>
+                            )}
 
-                        {coffeeShop.petFriendly && (
-                            <div className={styles.feature}>
-                                <Dog size={20} />
-                                <span>Pet Friendly</span>
-                            </div>
-                        )}
-
-                        {coffeeShop.outdoorSeating && (
-                            <div className={styles.feature}>
-                                <Sun size={20} />
-                                <span>Outdoor Seating</span>
-                            </div>
-                        )}
-
-                        {coffeeShop.indoorSeating && (
-                            <div className={styles.feature}>
-                                <Home size={20} />
-                                <span>Indoor Seating</span>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className={styles.infoGrid}>
-                        <div className={styles.infoItem}>
-                            <MapPin size={20} />
-                            <span>{formatAddress()}</span>
+                            {coffeeShop.website && (
+                                <div className={styles.infoItem}>
+                                    <Globe size={20} />
+                                    <a href={coffeeShop.website} target="_blank" rel="noopener noreferrer">
+                                        Visit Website
+                                    </a>
+                                </div>
+                            )}
                         </div>
 
-                        {coffeeShop.phone && (
-                            <div className={styles.infoItem}>
-                                <Phone size={20} />
-                                <span>{coffeeShop.phone}</span>
+                        {(coffeeShop.openTime || coffeeShop.closeTime) && (
+                            <div className={styles.operatingHours}>
+                                <div className={styles.infoItem}>
+                                    <Clock size={20} />
+                                    <span>
+                                        {coffeeShop.openTime && coffeeShop.closeTime
+                                            ? `${formatTime(coffeeShop.openTime)} - ${formatTime(coffeeShop.closeTime)}`
+                                            : coffeeShop.openTime
+                                                ? `Opens at ${formatTime(coffeeShop.openTime)}`
+                                                : `Closes at ${formatTime(coffeeShop.closeTime)}`
+                                        }
+                                        {coffeeShop.overNight && ' (Open Overnight)'}
+                                    </span>
+                                </div>
                             </div>
                         )}
 
-                        {coffeeShop.email && (
-                            <div className={styles.infoItem}>
-                                <Mail size={20} />
-                                <a href={`mailto:${coffeeShop.email}`}>
-                                    {coffeeShop.email}
-                                </a>
-                            </div>
-                        )}
+                        <div className={styles.features}>
+                            {coffeeShop.wifi && (
+                                <div className={styles.feature}>
+                                    <Wifi size={20} />
+                                    <span className={styles.wifiPassword}>{coffeeShop.wifi}</span>
+                                </div>
+                            )}
 
-                        {coffeeShop.website && (
-                            <div className={styles.infoItem}>
-                                <Globe size={20} />
-                                <a
-                                    href={coffeeShop.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Visit Website
-                                </a>
-                            </div>
-                        )}
-                    </div>
+                            {coffeeShop.cake && (
+                                <div className={styles.feature}>
+                                    <Cake size={20} />
+                                    <span>Cake Available</span>
+                                </div>
+                            )}
 
-                    <div className={styles.description}>
-                        <h2>About</h2>
-                        <p>{coffeeShop.description}</p>
+                            {coffeeShop.carPark && (
+                                <div className={styles.feature}>
+                                    <Car size={20} />
+                                    <span>Car Parking</span>
+                                </div>
+                            )}
+
+                            {coffeeShop.petFriendly && (
+                                <div className={styles.feature}>
+                                    <Dog size={20} />
+                                    <span>Pet Friendly</span>
+                                </div>
+                            )}
+
+                            {coffeeShop.outdoorSeating && (
+                                <div className={styles.feature}>
+                                    <Sun size={20} />
+                                    <span>Outdoor Seating</span>
+                                </div>
+                            )}
+
+                            {coffeeShop.indoorSeating && (
+                                <div className={styles.feature}>
+                                    <Home size={20} />
+                                    <span>Indoor Seating</span>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={styles.description}>
+                            <h2>About</h2>
+                            <p>{coffeeShop.description}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <Rating
-                coffeeShopId={coffeeShop.id}
-                ratings={ratings}
-                onRatingUpdate={fetchData}
-            />
+            <div className={styles.ratingsSection}>
+                <Rating
+                    coffeeShopId={coffeeShop.id}
+                    ratings={ratings}
+                    onRatingUpdate={fetchData}
+                />
+            </div>
 
-            {showEditModal && coffeeShop && (
+            {showEditModal && (
                 <EditCoffeeShop
                     isOpen={showEditModal}
                     onClose={() => setShowEditModal(false)}

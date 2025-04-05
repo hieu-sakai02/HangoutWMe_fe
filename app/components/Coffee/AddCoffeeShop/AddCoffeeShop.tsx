@@ -2,11 +2,12 @@
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import styles from './AddCoffeeShop.module.css';
-import { X, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, Loader2, Coffee, Car, Dog, Wifi, Cake, Sun, Home, Moon } from 'lucide-react';
 import { uploadImage } from '@/apis/cloudinaryService';
 import { createNewCoffeeShop, CreateCoffeeShopData } from '@/apis/coffeeShopService';
 import { toast } from 'react-toastify';
 import { ADDRESS } from '@/app/constant/CONST';
+import Toggle from '@/app/components/Toggle/Toggle';
 
 interface AddCoffeeShopProps {
     isOpen: boolean;
@@ -54,6 +55,16 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
         Object.keys(ADDRESS[addressSelections.city][addressSelections.district]) : [];
     const availableStreets = addressSelections.ward ?
         ADDRESS[addressSelections.city][addressSelections.district][addressSelections.ward].Streets : [];
+
+    // Add scroll lock effect
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -193,23 +204,11 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                             onClick={handleImageClick}
                         >
                             {imagePreview ? (
-                                <>
-                                    <img
-                                        src={imagePreview}
-                                        alt="Coffee shop thumbnail preview"
-                                        className={styles.thumbnailPreview}
-                                    />
-                                    <button
-                                        type="button"
-                                        className={styles.removeImageButton}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleRemoveImage();
-                                        }}
-                                    >
-                                        <X size={20} />
-                                    </button>
-                                </>
+                                <img
+                                    src={imagePreview}
+                                    alt="Coffee shop thumbnail preview"
+                                    className={styles.thumbnailPreview}
+                                />
                             ) : (
                                 <div className={styles.uploadPlaceholder}>
                                     <ImageIcon size={40} />
@@ -222,9 +221,9 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                         </div>
                         <input
                             type="file"
-                            accept="image/*"
                             ref={fileInputRef}
                             onChange={handleImageChange}
+                            accept="image/*"
                             className={styles.fileInput}
                         />
                     </div>
@@ -242,7 +241,7 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                         />
                     </div>
 
-                    <div className={styles.addressSection}>
+                    <div className={styles.formSection}>
                         <h3>Address Details</h3>
                         <div className={styles.addressGrid}>
                             <div className={styles.inputGroup}>
@@ -268,9 +267,7 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                                 >
                                     <option value="">Select City</option>
                                     {Object.keys(ADDRESS).map(city => (
-                                        <option key={city} value={city}>
-                                            {city}
-                                        </option>
+                                        <option key={city} value={city}>{city}</option>
                                     ))}
                                 </select>
                             </div>
@@ -286,9 +283,7 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                                 >
                                     <option value="">Select District</option>
                                     {availableDistricts.map(district => (
-                                        <option key={district} value={district}>
-                                            {district}
-                                        </option>
+                                        <option key={district} value={district}>{district}</option>
                                     ))}
                                 </select>
                             </div>
@@ -304,15 +299,13 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                                 >
                                     <option value="">Select Ward</option>
                                     {availableWards.map(ward => (
-                                        <option key={ward} value={ward}>
-                                            {ward}
-                                        </option>
+                                        <option key={ward} value={ward}>{ward}</option>
                                     ))}
                                 </select>
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label htmlFor="street">Street (Optional)</label>
+                                <label htmlFor="street">Street</label>
                                 <select
                                     id="street"
                                     value={addressSelections.street}
@@ -321,181 +314,166 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                                 >
                                     <option value="">Select Street</option>
                                     {availableStreets.map(street => (
-                                        <option key={street} value={street}>
-                                            {street}
-                                        </option>
+                                        <option key={street} value={street}>{street}</option>
                                     ))}
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="description">Description *</label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            required
-                            placeholder="Enter coffee shop description"
-                            rows={4}
-                        />
+                    <div className={styles.formSection}>
+                        <h3>Description</h3>
+                        <div className={styles.descriptionGroup}>
+                            <textarea
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                                placeholder="Describe your coffee shop..."
+                                rows={6}
+                            />
+                        </div>
                     </div>
 
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="phone">Phone Number (Optional)</label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="Enter phone number"
-                        />
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="email">Email (Optional)</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter email address"
-                        />
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="website">Website (Optional)</label>
-                        <input
-                            type="url"
-                            id="website"
-                            name="website"
-                            value={formData.website}
-                            onChange={handleChange}
-                            placeholder="Enter website URL"
-                        />
-                    </div>
-
-                    <div className={styles.featuresSection}>
-                        <h3>Features & Amenities</h3>
-                        <div className={styles.featuresGrid}>
-                            <div className={styles.checkboxGroup}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.carPark}
-                                        onChange={(e) => handleChange({
-                                            target: { name: 'carPark', value: e.target.checked }
-                                        } as any)}
-                                    />
-                                    Car Parking
-                                </label>
-                            </div>
-
-                            <div className={styles.checkboxGroup}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.petFriendly}
-                                        onChange={(e) => handleChange({
-                                            target: { name: 'petFriendly', value: e.target.checked }
-                                        } as any)}
-                                    />
-                                    Pet Friendly
-                                </label>
+                    <div className={styles.formSection}>
+                        <h3>Operating Hours</h3>
+                        <div className={styles.timeInputs}>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="openTime">Opening Time</label>
+                                <input
+                                    type="time"
+                                    id="openTime"
+                                    name="openTime"
+                                    value={formData.openTime}
+                                    onChange={handleChange}
+                                />
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label htmlFor="wifi">WiFi</label>
+                                <label htmlFor="closeTime">Closing Time</label>
+                                <input
+                                    type="time"
+                                    id="closeTime"
+                                    name="closeTime"
+                                    value={formData.closeTime}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <Toggle
+                                label="Open Overnight"
+                                checked={formData.overNight}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'overNight', value: checked }
+                                } as any)}
+                                icon={<Moon size={20} />}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <h3>Contact Information</h3>
+                        <div className={styles.contactGrid}>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="phone">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    placeholder="Enter phone number"
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="email">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter email address"
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="website">Website</label>
+                                <input
+                                    type="url"
+                                    id="website"
+                                    name="website"
+                                    value={formData.website}
+                                    onChange={handleChange}
+                                    placeholder="Enter website URL"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <h3>Features & Amenities</h3>
+                        <div className={styles.featuresGrid}>
+                            <Toggle
+                                label="Car Parking"
+                                checked={formData.carPark}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'carPark', value: checked }
+                                } as any)}
+                                icon={<Car size={20} />}
+                            />
+
+                            <Toggle
+                                label="Pet Friendly"
+                                checked={formData.petFriendly}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'petFriendly', value: checked }
+                                } as any)}
+                                icon={<Dog size={20} />}
+                            />
+
+                            <Toggle
+                                label="Cake Available"
+                                checked={formData.cake}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'cake', value: checked }
+                                } as any)}
+                                icon={<Cake size={20} />}
+                            />
+
+                            <Toggle
+                                label="Outdoor Seating"
+                                checked={formData.outdoorSeating}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'outdoorSeating', value: checked }
+                                } as any)}
+                                icon={<Sun size={20} />}
+                            />
+
+                            <Toggle
+                                label="Indoor Seating"
+                                checked={formData.indoorSeating}
+                                onChange={(checked) => handleChange({
+                                    target: { name: 'indoorSeating', value: checked }
+                                } as any)}
+                                icon={<Home size={20} />}
+                            />
+
+                            <div className={styles.wifiInput}>
+                                <div className={styles.wifiInputHeader}>
+                                    <Wifi size={20} />
+                                    <label htmlFor="wifi">WiFi Password</label>
+                                </div>
                                 <input
                                     type="text"
                                     id="wifi"
                                     name="wifi"
                                     value={formData.wifi}
                                     onChange={handleChange}
-                                    placeholder="WiFi details (optional)"
+                                    placeholder="Enter password"
                                 />
-                            </div>
-
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="cake">Cake Service</label>
-                                <input
-                                    type="text"
-                                    id="cake"
-                                    name="cake"
-                                    value={formData.cake}
-                                    onChange={handleChange}
-                                    placeholder="Cake service details (optional)"
-                                />
-                            </div>
-
-                            <div className={styles.checkboxGroup}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.outdoorSeating}
-                                        onChange={(e) => handleChange({
-                                            target: { name: 'outdoorSeating', value: e.target.checked }
-                                        } as any)}
-                                    />
-                                    Outdoor Seating
-                                </label>
-                            </div>
-
-                            <div className={styles.checkboxGroup}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.indoorSeating}
-                                        onChange={(e) => handleChange({
-                                            target: { name: 'indoorSeating', value: e.target.checked }
-                                        } as any)}
-                                    />
-                                    Indoor Seating
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className={styles.operatingHours}>
-                            <h3>Operating Hours</h3>
-                            <div className={styles.timeInputs}>
-                                <div className={styles.inputGroup}>
-                                    <label htmlFor="openTime">Opening Time</label>
-                                    <input
-                                        type="time"
-                                        id="openTime"
-                                        name="openTime"
-                                        value={formData.openTime}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className={styles.inputGroup}>
-                                    <label htmlFor="closeTime">Closing Time</label>
-                                    <input
-                                        type="time"
-                                        id="closeTime"
-                                        name="closeTime"
-                                        value={formData.closeTime}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className={styles.checkboxGroup}>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={formData.overNight}
-                                            onChange={(e) => handleChange({
-                                                target: { name: 'overNight', value: e.target.checked }
-                                            } as any)}
-                                        />
-                                        Open Overnight
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -513,7 +491,14 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                             className={styles.submitButton}
                             disabled={loading}
                         >
-                            {loading ? 'Adding...' : 'Add Coffee Shop'}
+                            {loading ? (
+                                <>
+                                    <Loader2 size={20} className={styles.spinner} />
+                                    Adding...
+                                </>
+                            ) : (
+                                'Add Coffee Shop'
+                            )}
                         </button>
                     </div>
                 </form>

@@ -200,7 +200,7 @@ export default function Coffee() {
             <div className={styles.header}>
                 <h1>Coffee Shops</h1>
                 <p>Discover the best coffee shops around you</p>
-                {currentUser && (
+                {currentUser?.isAdmin && (
                     <button
                         className={styles.addButton}
                         onClick={() => setShowAddModal(true)}
