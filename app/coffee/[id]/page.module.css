@@ -30,16 +30,23 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.leftSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 .imageSection {
     position: relative;
-    height: 100%;
-    min-height: 400px;
+    width: 100%;
+    height: 400px;
 }
 
 .image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 12px;
 }
 
 .detailsSection {
@@ -104,12 +111,93 @@
     color: #dc3545;
 }
 
+.operatingHours {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    color: var(--text-color);
+}
+
+.feature svg {
+    color: #ff2d8d;
+}
+
+.featureDetail {
+    font-size: 0.875rem;
+    color: #666;
+    margin-left: auto;
+}
+
 @media (max-width: 768px) {
     .content {
         grid-template-columns: 1fr;
     }
 
     .imageSection {
-        min-height: 300px;
+        height: 300px;
     }
+
+    .leftSection {
+        gap: 1rem;
+    }
+
+    .featuresGrid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        padding: 1rem;
+    }
+
+    .feature {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #ff2d8d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.editButton:hover {
+    background: #e6267e;
+    transform: scale(1.05);
 } 

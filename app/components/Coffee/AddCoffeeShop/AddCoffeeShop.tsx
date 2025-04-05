@@ -30,7 +30,16 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
         email: '',
         website: '',
         thumbnail: '',
-        description: ''
+        description: '',
+        carPark: false,
+        petFriendly: false,
+        wifi: '',
+        cake: '',
+        outdoorSeating: false,
+        indoorSeating: false,
+        openTime: '',
+        closeTime: '',
+        overNight: false
     });
     const [addressSelections, setAddressSelections] = useState({
         city: '',
@@ -368,6 +377,127 @@ export default function AddCoffeeShop({ isOpen, onClose, onSuccess }: AddCoffeeS
                             onChange={handleChange}
                             placeholder="Enter website URL"
                         />
+                    </div>
+
+                    <div className={styles.featuresSection}>
+                        <h3>Features & Amenities</h3>
+                        <div className={styles.featuresGrid}>
+                            <div className={styles.checkboxGroup}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.carPark}
+                                        onChange={(e) => handleChange({
+                                            target: { name: 'carPark', value: e.target.checked }
+                                        } as any)}
+                                    />
+                                    Car Parking
+                                </label>
+                            </div>
+
+                            <div className={styles.checkboxGroup}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.petFriendly}
+                                        onChange={(e) => handleChange({
+                                            target: { name: 'petFriendly', value: e.target.checked }
+                                        } as any)}
+                                    />
+                                    Pet Friendly
+                                </label>
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="wifi">WiFi</label>
+                                <input
+                                    type="text"
+                                    id="wifi"
+                                    name="wifi"
+                                    value={formData.wifi}
+                                    onChange={handleChange}
+                                    placeholder="WiFi details (optional)"
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="cake">Cake Service</label>
+                                <input
+                                    type="text"
+                                    id="cake"
+                                    name="cake"
+                                    value={formData.cake}
+                                    onChange={handleChange}
+                                    placeholder="Cake service details (optional)"
+                                />
+                            </div>
+
+                            <div className={styles.checkboxGroup}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.outdoorSeating}
+                                        onChange={(e) => handleChange({
+                                            target: { name: 'outdoorSeating', value: e.target.checked }
+                                        } as any)}
+                                    />
+                                    Outdoor Seating
+                                </label>
+                            </div>
+
+                            <div className={styles.checkboxGroup}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.indoorSeating}
+                                        onChange={(e) => handleChange({
+                                            target: { name: 'indoorSeating', value: e.target.checked }
+                                        } as any)}
+                                    />
+                                    Indoor Seating
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className={styles.operatingHours}>
+                            <h3>Operating Hours</h3>
+                            <div className={styles.timeInputs}>
+                                <div className={styles.inputGroup}>
+                                    <label htmlFor="openTime">Opening Time</label>
+                                    <input
+                                        type="time"
+                                        id="openTime"
+                                        name="openTime"
+                                        value={formData.openTime}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className={styles.inputGroup}>
+                                    <label htmlFor="closeTime">Closing Time</label>
+                                    <input
+                                        type="time"
+                                        id="closeTime"
+                                        name="closeTime"
+                                        value={formData.closeTime}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className={styles.checkboxGroup}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.overNight}
+                                            onChange={(e) => handleChange({
+                                                target: { name: 'overNight', value: e.target.checked }
+                                            } as any)}
+                                        />
+                                        Open Overnight
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={styles.buttonGroup}>

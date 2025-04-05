@@ -5,12 +5,19 @@ export const ADDRESS = {
             "Hàng Bạc": { "Streets": ["Gia Ngư"] },
             "Hàng Đào": { "Streets": [] },
             "Trần Nhật Duật": { "Streets": ["Tập Thể Ga Long Biên"] },
-            "Hàng Trống": { "Streets": ["Nhà Thờ"] }
+            "Hàng Trống": { "Streets": ["Nhà Thờ"] },
+            "Phan Bội Châu": { "Streets": [] }
         },
         "Cầu Giấy": {
-            "Mai Dịch": { "Streets": ["Xuân Thủy", "Trần Thái Tông", "Cầu Giấy", "Mai Dịch"] },
+            "Mai Dịch": { "Streets": [] },
             "Dịch Vọng": { "Streets": [] },
-            "Yên Hòa": { "Streets": [] }
+            "Yên Hòa": { "Streets": ["Vũ Phạm Hàm"] },
+            "Trần Thái Tông": { "Streets": [] },
+            "Quan Hoa": { "Streets": [] },
+            "Dịch Vọng Hậu": { "Streets": ["Trần Quốc Hoàn"] },
+            "Nguyễn Khang": { "Streets": [] },
+            "Trần Kim Xuyến": { "Streets": [] },
+            "Trung Hòa": { "Streets": ["Hoàng Ngân"] },
         }
     },
     "TP. Hồ Chí Minh": {

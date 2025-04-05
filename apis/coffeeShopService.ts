@@ -15,6 +15,16 @@ export interface CoffeeShop {
     website?: string;
     thumbnail: string;
     description: string;
+    pictures?: string[];
+    carPark?: boolean;
+    petFriendly?: boolean;
+    wifi?: string;
+    cake?: boolean;
+    outdoorSeating?: boolean;
+    indoorSeating?: boolean;
+    openTime?: string;
+    closeTime?: string;
+    overNight?: boolean;
     show: boolean;
     created_at?: string;
     updated_at?: string;
@@ -38,6 +48,16 @@ export interface CreateCoffeeShopData {
     website?: string;
     thumbnail: string;
     description: string;
+    pictures?: string[];
+    carPark?: boolean;
+    petFriendly?: boolean;
+    wifi?: string;
+    cake?: string;
+    outdoorSeating?: boolean;
+    indoorSeating?: boolean;
+    openTime?: string;
+    closeTime?: string;
+    overNight?: boolean;
 }
 
 export interface UpdateCoffeeShopData {
@@ -52,6 +72,16 @@ export interface UpdateCoffeeShopData {
     website?: string;
     thumbnail?: string;
     description?: string;
+    pictures?: string[];
+    carPark?: boolean;
+    petFriendly?: boolean;
+    wifi?: string;
+    cake?: string;
+    outdoorSeating?: boolean;
+    indoorSeating?: boolean;
+    openTime?: string;
+    closeTime?: string;
+    overNight?: boolean;
 }
 
 export const getAllCoffeeShops = async () => {
